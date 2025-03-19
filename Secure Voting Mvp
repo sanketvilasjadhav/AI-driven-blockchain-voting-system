@@ -1,0 +1,60 @@
+import React, { useState } from "react";
+import { ethers } from "ethers";
+import Web3 from "web3";
+import { Button, Input, Card } from "@/components/ui";
+
+const VotingMVP = () => {
+  const [voterId, setVoterId] = useState("");
+  const [vote, setVote] = useState(null);
+  const [message, setMessage] = useState("");
+
+  // Dummy Blockchain Vote Submission
+  const submitVote = async () => {
+    if (!voterId || vote === null) {
+      setMessage("Please enter voter ID and select a candidate.");
+      return;
+    }
+
+    try {
+      const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
+      const accounts = await web3.eth.getAccounts();
+      setMessage("Processing vote...");
+
+      // Simulate blockchain vote storage (Replace with smart contract interaction)
+      setTimeout(() => {
+        setMessage(`Vote for Candidate ${vote} recorded successfully.`);
+      }, 2000);
+    } catch (error) {
+      setMessage("Error submitting vote. Please try again.");
+    }
+  };
+
+  return (
+    <div className="p-10 flex flex-col items-center">
+      <h1 className="text-3xl font-bold">Blockchain-Based Voting MVP</h1>
+      <Card className="p-5 mt-5 w-96">
+        <Input
+          type="text"
+          placeholder="Enter Voter ID"
+          value={voterId}
+          onChange={(e) => setVoterId(e.target.value)}
+        />
+        <div className="mt-3">
+          <label>Select Candidate:</label>
+          <select
+            className="border p-2 w-full"
+            onChange={(e) => setVote(e.target.value)}
+          >
+            <option value="">-- Choose --</option>
+            <option value="A">Candidate A</option>
+            <option value="B">Candidate B</option>
+          </select>
+        </div>
+        <Button className="mt-4" onClick={submitVote}>Submit Vote</Button>
+        {message && <p className="mt-3 text-green-500">{message}</p>}
+      </Card>
+    </div>
+  );
+};
+
+export default VotingMVP;
